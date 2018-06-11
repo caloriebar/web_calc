@@ -1,0 +1,2280 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Fancy calculator</title>
+    <!-- CSS for presentation,-->
+    <style type="text/css">
+    h1{
+        font-family: Arial, Helvetica, sans-serif;
+        font-size:30px;
+        text-align: center;
+        text-transform: uppercase;
+        color: #e0dfdc;
+    }
+    body{
+        background: #252525;
+        margin: 50px 50px 0px 50px;
+    }
+    #calculator{
+        border: 1px solid black;
+        margin:auto;
+        background: #d1d1d1;
+        width: 360px;
+        height: 640px;
+        padding: 10px 0px 0px 0px;
+        border-radius: 10px;
+        /* box-shadow: 10px 10px 10px rgb(107, 107, 107); */
+    }
+    #graph{
+        border: 1px solid black;
+        margin:auto;
+        background: #d1d1d1;
+        width: 360px;
+        height: 640px;
+        padding: 10px 0px 0px 0px;
+        border-radius: 10px;
+        display: none;
+    }
+
+    #result-window{
+        width: 320px;
+        height: 160px;
+        margin:auto;
+        background-color: #ffffff;
+        border-top: 2px solid rgb(192, 192, 192);
+        border-left: 2px solid rgb(192, 192, 192);
+        border-right: 2px solid rgb(192, 192, 192);
+        padding: 10px 10px 10px 10px;
+        border-top-left-radius:5px;
+        border-top-right-radius:5px;
+        overflow: auto;
+        overflow-y:scroll;
+        word-wrap:break-word;
+        font-size: 15px;
+    }
+
+
+    .graph-func{
+        height: 25px;
+        background-color: #ffffff;
+        border: 1px solid rgb(92, 92, 92);
+        position: relative;
+        top:0px;
+        font-size: 10px;
+        overflow: auto;
+        overflow-y:scroll;
+        word-wrap:break-word;
+    }
+    #canvas{
+        
+        margin:auto;
+        display:block;
+        background-color: #ffffff;
+        border-top: 2px solid rgb(192, 192, 192);
+        border-left: 2px solid rgb(192, 192, 192);
+        border-right: 2px solid rgb(192, 192, 192);
+        border-radius: 5px;
+        font-size: 15px;
+    }
+    #result{
+        margin:auto;
+        width: 320px;
+        height: 30px;
+        background-color: #ffffff;
+        border-top: 1px solid rgb(92, 92, 92);
+        border-left: 2px solid rgb(192, 192, 192);
+        border-right: 2px solid rgb(192, 192, 192);
+        position: relative;
+        overflow: auto;
+        overflow-y:scroll;
+        top:0px;
+        padding: 0px 10px 0px 10px;
+        font-size: 12px;
+    }
+    #graph-window{
+        margin:auto;
+        width: 320px;
+        height: 30px;
+        background-color: #ffffff;
+        border-top: 1px solid rgb(92, 92, 92);
+        border-left: 2px solid rgb(192, 192, 192);
+        border-right: 2px solid rgb(192, 192, 192);
+        position: relative;
+        top:0px;
+        padding: 0px 10px 0px 10px;
+        font-size: 12px;
+    }
+    #graph-result{
+        margin:auto;
+        width: 320px;
+        height: 30px;
+        background-color: #ffffff;
+        border-top: 1px solid rgb(92, 92, 92);
+        border-left: 2px solid rgb(192, 192, 192);
+        border-right: 2px solid rgb(192, 192, 192);
+        position: relative;
+        top:0px;
+        padding: 0px 10px 0px 10px;
+        font-size: 12px;
+    }
+    #history{
+        width: 289px;
+        height: 30px;
+        float: left;
+        background-color: #ffffff;
+        border: 2px solid rgb(192, 192, 192);
+        position: relative;
+        left:8px;
+        overflow: auto;
+        overflow-y:scroll;
+        font-size: 12px;
+    }
+    .history-clear{
+        width: 50px;
+        height: 30px;
+        float: left;
+        margin-left: 5px;
+        font-size: 13px;
+        background-color: #ffffff;
+        color:#000000;
+        border: 2px solid rgb(192, 192, 192);
+        text-align: center;
+        cursor: pointer;
+        line-height: 25px;
+    }
+
+
+    
+
+    .history-clear:active{
+        transform: translateY(3px);
+    }
+    tr,td{
+        padding:3px;
+    }
+
+    .key {
+        width: 70px;
+        height: 35px;
+        background-color: #eeeeee;
+        /* display: inline-flex; */
+        margin: 3px 5px 8px 0px;
+        vertical-align: middle;
+        justify-content: center;
+        text-align: center;
+        align-items: center;
+        padding: 5px 0px 5px 0px;
+        border-radius: 5px;
+        border: 2px solid rgb(192, 192, 192);
+        cursor: pointer;
+        font: bold 20px sans-serif;
+    }
+    .red{
+        background-color:rgb(238, 100, 169);
+    }
+
+    .keyFour{
+        width: 35px;
+        height: 40px;
+        background-color: #dfcb8c;
+        /* display: inline-flex; */
+        vertical-align: middle;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        border: 1px solid rgb(150, 150, 150);
+        cursor: pointer;
+        font: bold 25px sans-serif;
+    }
+    .keyConst{
+        width: 20px;
+        height: 20px;
+        background-color: #9e9e9e;
+        /* display: inline-flex; */
+        vertical-align: middle;
+        justify-content: center;
+        align-items: center;
+        border-radius: 4px;
+        text-align: center;
+        border: 0px solid rgb(114, 114, 114);
+        cursor: pointer;
+        font: 15px sans-serif;
+    }
+    .keyFunc{
+        width: 20px;
+        height: 15px;
+        background-color: #818181;
+        /* display: inline-flex; */
+        vertical-align: middle;
+        justify-content: center;
+        align-items: center;
+        border-radius: 4px;
+        text-align: center;
+        border: 1px solid rgb(114, 114, 114);
+        cursor: pointer;
+        font: bold 15px sans-serif;
+    }
+    .gkeyFunc{
+        width: 20px;
+        height: 15px;
+        background-color: #818181;
+        /* display: inline-flex; */
+        vertical-align: middle;
+        justify-content: center;
+        align-items: center;
+        border-radius: 4px;
+        text-align: center;
+        border: 1px solid rgb(114, 114, 114);
+        cursor: pointer;
+        font: bold 15px sans-serif;
+    }
+    .graph-key{
+        
+        height: 10px;
+        background-color: #818181;
+        /* display: inline-flex; */
+        vertical-align: middle;
+        justify-content: center;
+        align-items: center;
+        border-radius: 4px;
+        text-align: center;
+        border: 1px solid rgb(114, 114, 114);
+        cursor: pointer;
+        font:bold 10px sans-serif;
+    }
+
+    .graph-ratio-key{
+        position: absolute;
+        left:50%;
+        width: 30px;
+        height: 30px;
+        background-color: #ffffff;
+        border-radius: 20px;
+        vertical-align: middle;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        border: 2px solid rgb(71, 71, 71);
+        cursor: pointer;
+        font: bold 20px sans-serif;
+    }
+    .graph-ratio-key:active{
+        background-color: #c7c7c7;
+    }
+    .back-key{
+        
+        height: 10px;
+        background-color: #818181;
+        /* display: inline-flex; */
+        vertical-align: middle;
+        justify-content: center;
+        align-items: center;
+        border-radius: 4px;
+        text-align: center;
+        border: 1px solid rgb(114, 114, 114);
+        cursor: pointer;
+        font:bold 10px sans-serif;
+    }
+    .back-key:active {
+        transform: translateY(3px);
+    }
+    .graph-key:active {
+        transform: translateY(3px);
+    }
+
+    .key:active {
+        transform: translateY(3px);
+    }
+    .keyFour:active{
+        transform: translateY(3px);
+    }
+    .keyConst:active{
+        transform: translateY(3px);
+    }
+    .keyFunc:active{
+        transform: translateY(3px);
+    }
+    .pop-layer{
+        position: absolute;
+        left:50%;
+        
+        /* display:none; */
+        border-radius: 5px;
+        background-color:rgb(0, 0, 0);
+        box-shadow: 0 3px 0 #a1a1a1, 0 2px 5px rgba(0, 0, 0, .75); 
+        display: none;
+    }
+
+
+    .pop-element {
+        width: 20px;
+        height: 20px;
+        background-color: #eeeeee;
+        /* display: inline-flex; */
+        vertical-align: middle;
+        justify-content: center;
+        text-align: center;
+        align-items: center;
+        border-radius: 5px;
+        border: 1px solid rgb(56, 56, 56);
+        cursor: pointer;
+        font: bold 10px sans-serif;
+    }
+    .pop-element:active{
+        transform: translateX(2px);
+    }
+    .pop-element:hover{
+        background-color: #7aec96;
+    }
+    .mv-element{
+        background-color: #eeeeee;
+        /* display: inline-flex; */
+        border-radius: 0px;
+        width:10px;
+        height:10px;
+        border: 1px solid rgb(114, 114, 114);
+    }
+    
+    .mv-element:active{
+        transform: translateX(2px);
+    }
+    
+    .expression {
+        margin : 0;
+        padding : 1px;
+        display: inline-block;
+        background-color: #ffffff;
+        color: rgb(0, 0, 0);
+    }
+
+    .history-exper{
+        margin : 0;
+        padding : 1px;
+        background-color: #ffffff;
+        color: rgb(0, 0, 0);
+        font-size: 10px;
+        cursor: pointer;
+    }
+
+    .his-selected {
+        color : #FFFFFF;
+        background-color: rgb(65, 65, 65);
+    }
+
+    .selected {
+        color : #FFFFFF;
+        background-color: rgb(0, 0, 0);
+    }
+
+
+    .graph-expression {
+        margin : 0;
+        
+        display: inline-block;
+        background-color: #ffffff;
+        color: rgb(0, 0, 0);
+    }
+    .graph-selected{
+        color : #FFFFFF;
+        background-color: rgb(0, 0, 0);
+    }
+
+
+    .copy {
+        color : rgb(0, 173, 58);
+        background-color: rgb(255, 255, 255);
+        font: bold 15px sans-serif;
+    }
+    .paste {
+        color : rgb(34, 36, 185);
+        background-color: rgb(255, 255, 255);
+        font: bold 15px sans-serif;
+    }
+    .his-copy{
+        color : rgb(0, 173, 58);
+        background-color: rgb(255, 255, 255);
+        font: bold 10px sans-serif;
+    }
+
+
+    .no-drag {
+        -ms-user-select: none; -moz-user-select: -moz-none;
+    -webkit-user-select: none; -khtml-user-select: none; user-select:none;}
+    </style>
+
+    
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js' type='text/javascript'></script>
+
+
+    <script src='source/plotly-1.35.2.min.js' type='text/javascript'></script>
+    <script src='source/math.min.js' type='text/javascript'></script>
+
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>  
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+          "HTML-CSS": { scale: 75}
+        });
+    </script>
+
+
+
+    <script type="text/javascript">
+        var copyStr;
+        var f_selected=false;
+        var g_selected=false;
+        var x_selected=false;
+
+        var axix_add_scale=0;
+        var x_move = 0;
+        var y_move = 0;
+
+        var b_x_move =0;
+        var b_y_move =0;
+
+        var x_move_result=0;
+        var y_move_result=0;
+
+        var axes={};
+
+        var graph_parser = math.parser();
+        
+        $(document).ready(function(){
+
+            $("#sinLayer").hide();
+            $("#cosLayer").hide();
+            $("#tanLayer").hide();
+            $("#xyzLayer").hide();
+            $("#fgLayer").hide();
+            $("#matrix").hide();
+            $("#matOperLayer").hide();
+            $("#conLayer").hide();
+
+            $("#result-window").append("<p class='expression'>0</p>");
+            $("#f-func").append("<p class='graph-expression graph-selected'>0</p>");
+            $("#g-func").append("<p class='graph-expression'>0</p>");
+            $("#x-value").append("<p class='graph-expression'>0</p>");
+
+            var canvas_init = document.getElementById('canvas');
+        
+            axes.x0 = 0.5*canvas.width;  // x0 pixels from left to x=0
+            axes.y0 = 0.5*canvas.height; // y0 pixels from top to y=0
+            console.log("좌표값 초기화되냐?");
+
+
+            graph_parser.eval("f(x)="+$("#f-func").text());
+            graph_parser.eval("g(x)="+$("#g-func").text());
+            var parser = math.parser();
+            
+
+            var rIndex, cIndex;
+            
+            var displayValue = '';
+            //$('#result-window').text(displayValue);
+            // $('#latex').html('$$' + math.parse(displayValue).toTex() + '$$');
+
+            $(document).on("click", ".history-exper", function(){
+                var isSelected = $(this).hasClass("his-selected");
+
+                $(".expression").removeClass("selected");
+                $(".history-exper").removeClass("his-selected");
+
+                if(isSelected === false){
+                $(this).addClass("his-selected");
+                }
+            });
+
+
+            var isSelected, isPate;
+            $(document).on("touchstart", ".expression", function(){
+                $(".history-exper").removeClass("his-selected");
+                $(".expression").removeClass("copy");
+                $(".expression").removeClass("paste");
+
+
+                isSelected = $(this).hasClass("selected");
+                $(".expression").removeClass("selected");
+                if(isSelected == false){
+                    $(this).addClass("selected");
+                }
+
+                $(document).on("touchmove", ".expression", function(){
+                    isSelected = $(this).hasClass("selected");
+                    if(isSelected == false){
+                    $(this).addClass("selected");
+                    }
+                });
+            });
+            
+            $(document).on("touchend", ".expression", function(){
+                $(document).off("mouseover", ".expression");
+                if(isSelected == false){
+                    $(this).addClass("selected");
+                }
+            });
+
+            var is_fSelected;
+            $(document).on("mousedown", ".graph-expression", function(){
+               // draw();
+                is_fSelected = $(this).hasClass("graph-selected");
+                $(".graph-expression").removeClass("graph-selected");
+                if(is_fSelected == false){
+                    $(this).addClass("graph-selected");
+                }
+
+                $(document).on("mouseover", ".graph-expression", function(){
+                    is_fSelected = $(this).hasClass("graph-selected");
+                    if(is_fSelected == false){
+                        $(this).addClass("graph-selected");
+                    }
+                });
+
+                if($("#f-func").find('.graph-selected').length!=0)
+                {
+                    f_selected=true;
+                    g_selected=false;
+                    x_selected=false;
+                }
+                if($("#g-func").find('.graph-selected').length!=0)
+                {
+                    g_selected=true;
+                    f_selected=false;
+                    x_selected=false;
+                }
+                if($("#x-value").find('.graph-selected').length!=0)
+                {
+                    x_selected=true;
+                    f_selected=false;
+                    g_selected=false;
+                }
+                draw();
+            });
+            
+            $(document).on("mouseup", ".graph-expression", function(){
+                $(document).off("mouseover", ".graph-expression");
+                if(is_fSelected == false){
+                    $(this).addClass("graph-selected");
+                }
+            });
+
+            $(document).on("mousedown", "canvas", function(){
+               // draw();
+                //찍었을때 좌표값을 가져오고
+                // 드래그를 했을 때의 좌표값에서 뺴준다.
+                var x_ab = event.offsetX;
+                var y_ab = event.offsetY;
+                
+                //console.log("좌표: " + x + ", " + y);
+
+                $(document).on("mousemove", "canvas", function(){
+                    b_x_move = x_move;
+                    b_y_move = y_move;
+                    //console.log("이전 좌표:" + b_x_move + "," + b_y_move);
+                    x_move = event.offsetX - x_ab;
+                    y_move = event.offsetY - y_ab;
+                    //console.log("현재 좌표:" + x_move + "," + y_move);
+                    x_move_result = x_move-b_x_move;
+                    y_move_result = y_move-b_y_move;
+                    axes.x0 += x_move_result;
+                    axes.y0 += y_move_result;
+                    //console.log("두 좌표 차이:" + x_move_result + "," + y_move_result);
+                    draw();
+                });
+            });
+            
+            $(document).on("mouseup", "canvas", function(){
+                $(document).off("mousemove", "canvas");
+                x_move=0;
+                y_move=0;
+                
+            });
+
+            $("#matrix td").mouseover(function(){
+                var column_num = parseInt($(this).index());
+                var row_num = parseInt($(this).parent().index());
+
+                for(var i=0; i<=5; i++)
+                {
+                    for(var j=0; j<=5; j++)
+                    {
+                        $('#matrix tr:eq('+i+') td:eq('+j+')').attr("style","background-color:#eeeeee;font-size:0px;");
+                    }
+                }
+                for(var i=0; i<=row_num; i++)
+                {
+                    for(var j=0; j<=column_num; j++)
+                    {
+                        $('#matrix tr:eq('+i+') td:eq('+j+')').attr("style","background-color:rgb(238, 100, 169);font-size:0px;");
+                    }
+                }
+            });
+            $("#matrix td").mouseup(function(){
+                
+                var is_Pate = $(".expression").hasClass("paste");
+                if(is_Pate == true){
+                    $(".expression").removeClass("paste");
+                }
+                var column_num = parseInt($(this).index())+1;
+                var row_num = parseInt($(this).parent().index())+1;
+                console.log("matrix: "+row_num +", "+column_num);
+                if($("#result-window").text()=='0')
+                {
+                    $(".expression").remove();
+                }
+                var mat='[';
+                for(var i=1; i<=row_num; i++)
+                {
+                    if(row_num!=1)
+                        mat+='[';
+                    for(var j=1; j<column_num; j++)
+                    {
+                        mat+=','; 
+                    }
+                    if(row_num!=1)
+                        mat+=']';
+                    if(i!=row_num)
+                        mat+=',';
+                }
+                mat +=']';
+                var parcheck=false;
+                if($(".selected").length < 1)
+                {
+                    for(var k=0; k<mat.length; k++)
+                    {
+                        if(row_num==1 && k==0)
+                        {
+                            $("#result-window").append("<p class='expression selected'>"+mat.charAt(k)+"</p>");
+                        }
+                        else if(row_num!=1 && k==1)
+                        {
+                            $("#result-window").append("<p class='expression selected'>"+mat.charAt(k)+"</p>");
+                        }
+                        else
+                        $("#result-window").append("<p class='expression'>"+mat.charAt(k)+"</p>");
+                    }
+                }
+                else{
+                    var $selected = $(".selected");
+                    $selected.removeClass("selected");
+                    
+                    for(var k=0; k<mat.length; k++)
+                    {
+                        if(row_num==1 && k==mat.length-1)
+                        {
+                            $selected.after("<p class='expression selected'>"+mat.charAt(mat.length-(k+1))+"</p>");
+                        }
+                        else if(row_num!=1 && k==mat.length-2)
+                        {
+                            $selected.after("<p class='expression selected'>"+mat.charAt(mat.length-(k+1))+"</p>");
+                        }
+                        else
+                        $selected.after("<p class='expression'>"+mat.charAt(mat.length-(k+1))+"</p>");
+                    }
+                }
+            });
+
+            $(".pop-element,.mv-element").mouseup(function(){
+
+                var is_Pate = $(".expression").hasClass("paste");
+                if(is_Pate == true){
+                    $(".expression").removeClass("paste");
+                }
+
+                if($("#result-window").text()=='0')
+                {
+                    $(".expression").remove();
+                }
+                if($(this).text() =='sin-1')
+                {
+                    if($(".selected").length < 1)
+                    {
+                        $("#result-window").append("<p class='expression selected'>asin(</p>");
+                        $("#result-window").append("<p class='expression'>)</p>");
+                    }
+                    else{
+                        var $selected = $(".selected");
+                        $selected.removeClass("selected");
+                        $selected.after("<p class='expression'>)</p>");
+                        $selected.after("<p class='expression selected'>asin(</p>");
+                    }
+                }
+                else if($(this).text() =='cos-1')
+                {
+                    if($(".selected").length < 1)
+                    {
+                        $("#result-window").append("<p class='expression selected'>acos(</p>");
+                        $("#result-window").append("<p class='expression'>)</p>");
+                    }
+                    else{
+                        var $selected = $(".selected");
+                        $selected.removeClass("selected");
+                        $selected.after("<p class='expression'>)</p>");
+                        $selected.after("<p class='expression selected'>acos(</p>");
+                    }
+                }
+                else if($(this).text() =='tan-1')
+                {
+                    if($(".selected").length < 1)
+                    {
+                        $("#result-window").append("<p class='expression selected'>atan(</p>");
+                        $("#result-window").append("<p class='expression'>)</p>");
+                    }
+                    else{
+                        var $selected = $(".selected");
+                        $selected.removeClass("selected");
+                        $selected.after("<p class='expression'>)</p>");
+                        $selected.after("<p class='expression selected'>atan(</p>");
+                    }
+                }
+                else if($(this).text() == 'x'||$(this).text() == 'y'||$(this).text() == 'z')
+                {
+                    if($(".selected").length < 1)
+                    {
+                        $("#result-window").append("<p class='expression selected'>"+$(this).text()+"</p>");
+                    }
+                    else{
+                        var $selected = $(".selected");
+                        $selected.removeClass("selected");
+                        $selected.after("<p class='expression selected'>"+$(this).text()+"</p>");
+                    }
+                }
+                else if($(this).text() == 'f'||$(this).text() == 'g')
+                {
+                    if($(".selected").length < 1)
+                    {
+                        $("#result-window").append("<p class='expression selected'>"+$(this).text()+"(</p>");
+                        $("#result-window").append("<p class='expression'>)</p>");
+                    }
+                    else{
+                        var $selected = $(".selected");
+                        $selected.removeClass("selected");
+                        $selected.after("<p class='expression'>)</p>");
+                        $selected.after("<p class='expression selected'>"+$(this).text()+"(</p>");
+                    }
+                }
+                else if($(this).text() == 'cross'||$(this).text() == 'dot')
+                {
+                    if($(".selected").length < 1)
+                    {
+                        $("#result-window").append("<p class='expression selected'>"+$(this).text()+"(</p>");
+                        $("#result-window").append("<p class='expression'>,</p>");
+                        $("#result-window").append("<p class='expression'>)</p>");
+                    }
+                    else{
+                        var $selected = $(".selected");
+                        $selected.removeClass("selected");
+                        $selected.after("<p class='expression'>)</p>");
+                        $selected.after("<p class='expression'>,</p>");
+                        $selected.after("<p class='expression selected'>"+$(this).text()+"(</p>");
+                    }
+                }
+                else if($(this).text() == 'det'||$(this).text() == 'inv')
+                {
+                    if($(".selected").length < 1)
+                    {
+                        $("#result-window").append("<p class='expression selected'>"+$(this).text()+"(</p>");
+                        $("#result-window").append("<p class='expression'>)</p>");
+                    }
+                    else{
+                        var $selected = $(".selected");
+                        $selected.removeClass("selected");
+                        $selected.after("<p class='expression'>)</p>");
+                        $selected.after("<p class='expression selected'>"+$(this).text()+"(</p>");
+                    }
+                }
+        
+                else if($(this).text() == '!='||$(this).text() == '=='||$(this).text() == '<'||$(this).text() == '>'||$(this).text() == '>='||$(this).text() == '<=')
+                {
+                    var str = $(this).text();
+                               
+                    if($(".selected").length < 1)
+                    {
+                        for(var k=0; k<str.length; k++)
+                        {
+                            if(k==str.length-1)
+                            {
+                                $("#result-window").append("<p class='expression selected'>"+str.charAt(k)+"</p>");
+                            }
+                            else{
+                                $("#result-window").append("<p class='expression'>"+str.charAt(k)+"</p>");
+                            }
+                            
+                        }
+                    }
+                    else{
+                        var $selected = $(".selected");
+                        $selected.removeClass("selected");
+                        
+                        for(var k=0; k<str.length; k++)
+                        {
+                            if(k==0)
+                            {
+                                $selected.after("<p class='expression selected'>"+str.charAt(str.length-(k+1))+"</p>");
+                            }
+                            else
+                            {
+                                $selected.after("<p class='expression'>"+str.charAt(str.length-(k+1))+"</p>");
+                            }
+                            
+                        }
+                    }
+                }
+                
+            });
+            
+            
+            
+        
+
+
+
+            
+            $('.history-clear,.key,.keyFour,.keyConst,.keyFunc,.pop-element,.mv-element').each(function(index, key){       
+                $(this).click(function(e){
+
+                    console.log("값: ["+$(this).text()+"]");
+                    if(displayValue == '0') displayValue = '';
+                    
+                    if($(this).text() == 'EV')
+                    {
+                        try
+                        {
+                            $("#history").append("<p class='history-exper'>" + $("#result-window").text() + "</p>");
+                            displayValue = parser.eval($("#result-window").text()).toString();
+                            
+                            var tokens = displayValue.split(' ');
+                            if(tokens[0] == 'function')
+                            {
+                                displayValue = tokens[0];
+                            }
+                            displayValue = '= '+displayValue;
+                            $('#result').text(displayValue);
+
+                            displayValue = '0';
+                        }
+                        catch (e)
+                        {
+                            displayValue = '0';
+                            if(displayValue != 'function')
+                            {
+                                $('#result').text('= '+e);
+                            }
+                        }               
+                    }
+                    else
+                    {
+                        
+                        if($(this).text() == 'AC')
+                        {
+
+                            $(".his-copy").removeClass("his-copy");
+                            $(".expression").remove();
+                            $("#result-window").append("<p class='expression'>0</p>");
+                            $('#result').text('= ');
+
+                            
+
+                        }
+                        else if($(this).text() =='Delete←')
+                        {
+                            if($(".selected").length < 1)
+                            {
+                                $(".expression:last-child").remove();
+                            }
+                            else{
+                                var $selected = $(".selected");
+                                $selected.prev().addClass("selected");
+                                $selected.remove();
+                            }
+
+                            if($("#result-window").text()=="")
+                            {
+                                $("#result-window").append("<p class='expression'>0</p>");
+                            }
+                            
+                            // displayValue=displayValue.slice(0,-1);
+                            // if(displayValue=='')
+                            // {
+                            //     displayValue='0';
+                            // }
+                                
+                            // $('#result-window').text(displayValue);
+                        }
+                        
+                        else
+                        {
+                            if($("#result-window").text()=='0')
+                            {
+                                if( ($(this).text() !='copy') &&($(this).text() !='paste'))
+                                {
+                                    $(".expression").remove();
+                                }
+                                   
+                            }
+
+
+                            if($(this).text() =='×')
+                            {
+                                if($(".selected").length < 1)
+                                {
+                                    $("#result-window").append("<p class='expression selected'>*</p>");
+                                }
+                                else{
+                                    var $selected = $(".selected");
+                                    $selected.removeClass("selected");
+                                    $selected.after("<p class='expression selected'>*</p>");
+                                }
+                            }
+                            else if($(this).text() =='÷')
+                            {
+                                if($(".selected").length < 1)
+                                {
+                                    $("#result-window").append("<p class='expression selected'>/</p>");
+                                }
+                                else{
+                                    var $selected = $(".selected");
+                                    $selected.removeClass("selected");
+                                    $selected.after("<p class='expression selected'>/</p>");
+                                }
+                            }
+                            else if($(this).text() =='+'|$(this).text() =='-')
+                            {
+                                if($(".selected").length < 1)
+                                {
+                                    $("#result-window").append("<p class='expression selected'>"+$(this).text()+"</p>");
+                                }
+                                else{
+                                    var $selected = $(".selected");
+                                    $selected.removeClass("selected");
+                                    $selected.after("<p class='expression selected'>"+$(this).text()+"</p>");
+                                }
+                            }
+                            else if($(this).text() =='sin' ||$(this).text() =='cos'||$(this).text() =='tan')
+                            {
+                                if($(".selected").length < 1)
+                                {
+                                    $("#result-window").append("<p class='expression selected'>"+$(this).text()+"(</p>");
+                                    $("#result-window").append("<p class='expression'>)</p>");
+                                }
+                                else{
+                                    var $selected = $(".selected");
+                                    $selected.removeClass("selected");
+                                    $selected.after("<p class='expression'>)</p>");
+                                    $selected.after("<p class='expression selected'>"+$(this).text()+"(</p>");
+                                }
+                            }
+                            
+                            else if($(this).text() =='χ!')
+                            {
+                                if($(".selected").length < 1)
+                                {
+                                    $("#result-window").append("<p class='expression selected'>!</p>");
+                                }
+                                else{
+                                    var $selected = $(".selected");
+                                    $selected.removeClass("selected");
+                                    $selected.after("<p class='expression selected'>!</p>");
+                                }
+                            }
+                            else if($(this).text() =='√')
+                            {
+                                if($(".selected").length < 1)
+                                {
+                                    $("#result-window").append("<p class='expression selected'>sqrt(</p>");
+                                    $("#result-window").append("<p class='expression'>)</p>");
+                                }
+                                else{
+                                    var $selected = $(".selected");
+                                    $selected.removeClass("selected");
+                                    $selected.after("<p class='expression'>)</p>");
+                                    $selected.after("<p class='expression selected'>sqrt(</p>");
+                                }
+                            }
+                            else if($(this).text() =='log')
+                            {
+                                if($(".selected").length < 1)
+                                {
+                                    $("#result-window").append("<p class='expression selected'>log10(</p>");
+                                    $("#result-window").append("<p class='expression'>)</p>");
+                                }
+                                else{
+                                    var $selected = $(".selected");
+                                    $selected.removeClass("selected");
+                                    $selected.after("<p class='expression'>)</p>");
+                                    $selected.after("<p class='expression selected'>log10(</p>");
+                                }
+                            }
+                            else if($(this).text() =='ln')
+                            {
+                                if($(".selected").length < 1)
+                                {
+                                    $("#result-window").append("<p class='expression selected'>log(</p>");
+                                    $("#result-window").append("<p class='expression'>)</p>");
+                                }
+                                else{
+                                    var $selected = $(".selected");
+                                    $selected.removeClass("selected");
+                                    $selected.after("<p class='expression'>)</p>");
+                                    $selected.after("<p class='expression selected'>log(</p>");
+                                }
+                            }
+                            else if($(this).text() =='χ■')
+                            {
+                                if($(".selected").length < 1)
+                                {
+                                    $("#result-window").append("<p class='expression selected'>^</p>");
+                                }
+                                else{
+                                    var $selected = $(".selected");
+                                    $selected.removeClass("selected");
+                                    $selected.after("<p class='expression selected'>^</p>");
+                                }
+                            }
+                            else if($(this).text() =='π')
+                            {
+                                if($(".selected").length < 1)
+                                {
+                                    $("#result-window").append("<p class='expression selected'>pi</p>");
+                                }
+                                else{
+                                    var $selected = $(".selected");
+                                    $selected.removeClass("selected");
+                                    $selected.after("<p class='expression selected'>pi</p>");
+                                }
+                            }
+                            else if($(this).text() =='('||$(this).text() ==')'||$(this).text() =='.'||$(this).text() ==','||$(this).text() =='['||$(this).text() ==']'||$(this).text() =='i'||$(this).text() =='e')
+                            {
+                                if($(".selected").length < 1)
+                                {
+                                    $("#result-window").append("<p class='expression selected'>"+$(this).text()+"</p>");
+                                }
+                                else{
+                                    var $selected = $(".selected");
+                                    $selected.removeClass("selected");
+                                    $selected.after("<p class='expression selected'>"+$(this).text()+"</p>");
+                                }
+                            }
+                            else if($(this).text() >=48 || $(this).text() <=57)
+                            {
+                                if($(".selected").length < 1)
+                                {
+                                    $("#result-window").append("<p class='expression selected'>"+$(this).text()+"</p>");
+                                }
+                                else{
+                                    var $selected = $(".selected");
+                                    $selected.removeClass("selected");
+                                    $selected.after("<p class='expression selected'>"+$(this).text()+"</p>");
+                                }
+                            }
+                            else if($(this).text() =='×10χ')
+                            {
+                                var str = '*10^()';
+                               
+                                if($(".selected").length < 1)
+                                {
+                                    for(var k=0; k<str.length; k++)
+                                    {
+                                        if(k==str.length-2)
+                                        {
+                                            $("#result-window").append("<p class='expression selected'>"+str.charAt(k)+"</p>");
+                                        }
+                                        else{
+                                            $("#result-window").append("<p class='expression'>"+str.charAt(k)+"</p>");
+                                        }
+                                        
+                                    }
+                                }
+                                else{
+                                    var $selected = $(".selected");
+                                    $selected.removeClass("selected");
+                                    
+                                    for(var k=0; k<str.length; k++)
+                                    {
+                                        if(k==1)
+                                        {
+                                            $selected.after("<p class='expression selected'>"+str.charAt(str.length-(k+1))+"</p>");
+                                        }
+                                        else
+                                        {
+                                            $selected.after("<p class='expression'>"+str.charAt(str.length-(k+1))+"</p>");
+                                        }
+                                        
+                                    }
+                                }
+                            }
+                            else if($(this).text() =='■P□')
+                            {
+                                if($(".selected").length < 1)
+                                {
+                                    $("#result-window").append("<p class='expression selected'>permutations(</p>");
+                                    $("#result-window").append("<p class='expression'>,</p>");
+                                    $("#result-window").append("<p class='expression'>)</p>");
+                                }
+                                else{
+                                    var $selected = $(".selected");
+                                    $selected.removeClass("selected");
+                                    $selected.after("<p class='expression'>)</p>");
+                                    $selected.after("<p class='expression'>,</p>");
+                                    $selected.after("<p class='expression selected'>permutations(</p>");
+                                }
+                            }
+                            else if($(this).text() =='■C□')
+                            {
+                                if($(".selected").length < 1)
+                                {
+                                    $("#result-window").append("<p class='expression selected'>combinations(</p>");
+                                    $("#result-window").append("<p class='expression'>,</p>");
+                                    $("#result-window").append("<p class='expression'>)</p>");
+                                }
+                                else{
+                                    var $selected = $(".selected");
+                                    $selected.removeClass("selected");
+                                    $selected.after("<p class='expression'>)</p>");
+                                    $selected.after("<p class='expression'>,</p>");
+                                    $selected.after("<p class='expression selected'>combinations(</p>");
+                                }
+                            }
+                            else if($(this).text() =='ex')
+                            {
+                                if($(".selected").length < 1)
+                                {
+                                    $("#result-window").append("<p class='expression selected'>exp(</p>");
+                                    $("#result-window").append("<p class='expression'>)</p>");
+                                }
+                                else{
+                                    var $selected = $(".selected");
+                                    $selected.removeClass("selected");
+                                    $selected.after("<p class='expression'>)</p>");
+                                    $selected.after("<p class='expression selected'>exp(</p>");
+                                }
+                            }
+                            else if($(this).text() =='=')
+                            {
+                                if($(".selected").length < 1)
+                                {
+                                    $("#result-window").append("<p class='expression selected'>=</p>");
+                                }
+                                else{
+                                    var $selected = $(".selected");
+                                    $selected.removeClass("selected");
+                                    $selected.after("<p class='expression selected'>=</p>");
+                                }
+                            }
+                            else if($(this).text() =='mod')
+                            {
+                                if($(".selected").length < 1)
+                                {
+                                    $("#result-window").append("<p class='expression selected'>%</p>");
+                                }
+                                else{
+                                    var $selected = $(".selected");
+                                    $selected.removeClass("selected");
+                                    $selected.after("<p class='expression selected'>%</p>");
+                                }
+                            }
+                            else if($(this).text() =='copy')
+                            {
+                                if($(".selected").length>0)
+                                {
+                                    copyStr = $(".selected").text();
+                                    $(".selected").addClass("copy");
+                                    $("#result-window").removeClass("selected");
+                                }
+                                if($(".his-selected").length>0)
+                                {
+                                    copyStr = $(".his-selected").text();
+                                    $(".his-selected").addClass("his-copy");
+                                    $(".history-exper").removeClass("his-selected");
+                                    $("#result-window").removeClass("selected");
+                                }
+                            }
+                            else if($(this).text() =='paste')
+                            {
+                                //copy된 것이 없으면 no-action
+
+                                if(copyStr.length>0)
+                                {
+                                    //커서가 선택된게 있으면 그 뒤에 붙인다.
+                                    if($(".selected").length==1)
+                                    {
+                                        //수식창이 초기상태이면 없애고 하나 추가하고 그 뒤에 붙인다.
+                                        if($("#result-window").text()=='0')
+                                        {
+                                            
+                                            $(".expression").remove();
+                                            var $selected = $(".selected");
+                                            var $copy = $(".his-copy")
+
+                                            $selected.removeClass("selected");
+                                            $copy.removeClass("his-copy");
+                                            
+                                            for(var k=0; k<copyStr.length; k++)
+                                            {
+                                                $("#result-window").append("<p class='expression paste'>" + copyStr.charAt(k) + "</p>");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            var $selected = $(".selected");
+                                            var $copy = $(".his-copy")
+
+                                            $selected.removeClass("selected");
+                                            $copy.removeClass("his-copy");
+                                            
+                                            for(var l=0;l<copyStr.length;l++)
+                                            {
+                                                $selected.after("<p class='expression paste'>" + copyStr.charAt(copyStr.length-1-l) + "</p>");
+                                            }
+                                        }
+                                    }
+
+                                }                          
+                            }
+                            else if($(this).text() =='clear')
+                            {
+                                $(".history-exper").remove();
+                            }
+
+                            
+                        }
+
+                        
+                        
+                        // else
+                        // {                        
+                        //     displayValue += $(this).text();
+                        //     $('#result-window').text(displayValue);
+                        // }
+
+                        // var node = math.parse(displayValue);
+                        // var latex = node.toTex({parenthesis: 'keep', implicit: 'hide'});
+                        // var elem = MathJax.Hub.getAllJax('latex')[0];
+                        // MathJax.Hub.Queue(['Text', elem, latex]);                      
+                    }
+                    e.preventDefault();
+
+
+                    if($(".expression").hasClass("paste") == true){
+                        $(".expression").removeClass("paste");
+                    }
+                    if($(".history-exper").hasClass("his-selected")==true){
+                        $(".history-exper").removeClass("his-selected");
+                    }
+
+                })
+                $(this).mousedown(function(e){
+                    if($(this).text() == 'sin' ||$(this).text() == 'sin-1')
+                    {
+                        $("#sinLayer").show();
+                    }
+                    else if($(this).text() == 'cos' ||$(this).text() == 'cos-1')
+                    {
+                        $("#cosLayer").show();
+                    }
+                    else if($(this).text() == 'tan' ||$(this).text() == 'tan-1')
+                    {
+                        $("#tanLayer").show();
+                    }
+                    else if($(this).text() == 'x,y,z' ||$(this).text() == 'x'||$(this).text() == 'y'||$(this).text() == 'z')
+                    {
+                        $("#xyzLayer").show();
+                    }
+                    else if($(this).text() == 'f( ),g( )' ||$(this).text() == 'f'||$(this).text() == 'g')
+                    {
+                        $("#fgLayer").show();
+                    }
+                    else if($(this).text() =='[matrix](vector)'|| $(this).text() == 'ㆍ')
+                    {
+                        $("#matrix").show();
+                    }
+                    else if($(this).text() == 'cross,dot,...'||$(this).text() == 'cross'||$(this).text() == 'dot'||$(this).text() == 'det'||$(this).text() == 'inv')
+                    {
+                        $("#matOperLayer").show();
+                    }
+                    else if($(this).text() == '!=')
+                    {
+                        $("#conLayer").show();
+                    }
+                })
+                $(this).mouseup(function(e){
+                    if($(this).text() == 'sin'||$(this).text() == 'sin-1')
+                    {
+                        $("#sinLayer").hide();
+                    }
+                    else if($(this).text() == 'cos' ||$(this).text() == 'cos-1')
+                    {
+                        $("#cosLayer").hide();
+                    }
+                    else if($(this).text() == 'tan' ||$(this).text() == 'tan-1')
+                    {
+                        $("#tanLayer").hide();
+                    }
+                    else if($(this).text() == 'x,y,z' ||$(this).text() == 'x'||$(this).text() == 'y'||$(this).text() == 'z')
+                    {
+                        $("#xyzLayer").hide();
+                    }
+                    else if($(this).text() == 'f( ),g( )' ||$(this).text() == 'f'||$(this).text() == 'g')
+                    {
+                        $("#fgLayer").hide();
+                    }
+                    else if($(this).text() == '[matrix](vector)' || $(this).text() == 'ㆍ')
+                    {
+                        $("#matrix").hide();
+                    }
+                    else if($(this).text() == 'cross,dot,...'||$(this).text() == 'cross'||$(this).text() == 'dot'||$(this).text() == 'det'||$(this).text() == 'inv')
+                    {
+                        $("#matOperLayer").hide();
+                    }
+                    else if($(this).text() == '!='||$(this).text() == '=='||$(this).text() == '<'||$(this).text() == '>'||$(this).text() == '>='||$(this).text() == '<=')
+                    {
+                        $("#conLayer").hide();
+                    }
+                })
+
+            })
+            //그래프 관련 키
+            
+
+
+
+            var f_value;
+            var g_value;
+            
+            $('.graph-key').each(function(index, key){     
+                $(this).click(function(e){
+
+                    // console.log("f: "+f_value);
+                    // console.log("g: "+g_value);
+                    if($(this).text() == 'AC')
+                    {
+                        $(".graph-expression").remove();
+                        $("#f-func").append("<p class='graph-expression graph-selected'>0</p>");
+                        $("#g-func").append("<p class='graph-expression'>0</p>");
+                        $("#x-value").append("<p class='graph-expression'>0</p>");
+
+                        canvas_init = document.getElementById('canvas');
+                        axix_add_scale=0;
+                        x_move = 0;
+                        y_move = 0;
+                        axes.x0 = 0.5*canvas.width;  // x0 pixels from left to x=0
+                        axes.y0 = 0.5*canvas.height; // y0 pixels from top to y=0
+                    }
+                    else if($(this).text() =='Delete←')
+                    {
+                        
+                        var $selected = $(".graph-selected");
+                        $selected.prev().addClass("graph-selected");
+                        $selected.remove();
+
+                        if($("#f-func").text()=="")
+                        {
+                            $("#f-func").append("<p class='graph-expression graph-selected'>0</p>");
+                        }
+                        if($("#g-func").text()=="")
+                        {
+                            $("#g-func").append("<p class='graph-expression graph-selected'>0</p>");
+                        }
+                        if($("#x-value").text()=="")
+                        {
+                            $("#x-value").append("<p class='graph-expression graph-selected'>0</p>");
+                        }
+                    }
+
+                    else
+                    {
+                        //
+                        if($("#f-func").find('.graph-selected').length!=0)
+                        {
+                            console.log("f");
+                            f_selected=true;
+                            g_selected=false;
+                            x_selected=false;
+                            
+                            if($("#f-func").text()=='0')
+                                $(".graph-selected").remove(); 
+                        }
+                        if($("#g-func").find('.graph-selected').length!=0)
+                        {
+                            console.log("g");
+                            g_selected=true;
+                            f_selected=false;
+                            x_selected=false;
+                            
+                            if($("#g-func").text()=='0')
+                            $(".graph-selected").remove();
+                        }
+                        if($("#x-value").find('.graph-selected').length!=0)
+                        {
+                            console.log("x");
+                            x_selected=true;
+                            f_selected=false;
+                            g_selected=false;
+                            
+                            if($("#x-value").text()=='0')
+                            $(".graph-selected").remove();
+                        }
+
+                        if($(this).text() =='+'|$(this).text() =='-')
+                        {
+                            if($(".graph-selected").length < 1)
+                            {
+                                if(f_selected)
+                                    $("#f-func").append("<p class='graph-expression graph-selected'>"+$(this).text()+"</p>");
+                                if(g_selected)
+                                $("#g-func").append("<p class='graph-expression graph-selected'>"+$(this).text()+"</p>");
+                                if(x_selected)
+                                $("#x-value").append("<p class='graph-expression graph-selected'>"+$(this).text()+"</p>");
+                            }
+                            else{
+                                var $selected = $(".graph-selected");
+                                $selected.removeClass("graph-selected");
+                                $selected.after("<p class='graph-expression graph-selected'>"+$(this).text()+"</p>");
+                            }
+                        }
+                        else if($(this).text() =='×')
+                        {
+
+                            if($(".graph-selected").length < 1)
+                            {
+                                if(f_selected)
+                                    $("#f-func").append("<p class='graph-expression graph-selected'>*</p>");
+                                if(g_selected)
+                                $("#g-func").append("<p class='graph-expression graph-selected'>*</p>");
+                                if(x_selected)
+                                $("#x-value").append("<p class='graph-expression graph-selected'>*</p>");
+                            }
+                            else{
+                                var $selected = $(".graph-selected");
+                                $selected.removeClass("graph-selected");
+                                $selected.after("<p class='graph-expression graph-selected'>*</p>");
+                            }
+                        }
+                        else if($(this).text() =='÷')
+                        {
+                            if($(".graph-selected").length < 1)
+                            {
+                                if(f_selected)
+                                    $("#f-func").append("<p class='graph-expression graph-selected'>/</p>");
+                                if(g_selected)
+                                $("#g-func").append("<p class='graph-expression graph-selected'>/</p>");
+                                if(x_selected)
+                                $("#x-value").append("<p class='graph-expression graph-selected'>/</p>");
+                            }
+                            else{
+                                var $selected = $(".graph-selected");
+                                $selected.removeClass("graph-selected");
+                                $selected.after("<p class='graph-expression graph-selected'>/</p>");
+                            }
+                        }
+                        else if($(this).text() =='sin' ||$(this).text() =='cos'||$(this).text() =='tan')
+                        {
+                            if($(".graph-selected").length < 1)
+                            {
+                                if(f_selected)
+                                {
+                                    $("#f-func").append("<p class='graph-expression graph-selected'>"+$(this).text()+"(</p>");
+                                    $("#f-func").append("<p class='graph-expression'>)</p>");
+                                }     
+                                if(g_selected)
+                                {
+                                    $("#g-func").append("<p class='graph-expression graph-selected'>"+$(this).text()+"(</p>");
+                                    $("#g-func").append("<p class='graph-expression'>)</p>");
+                                }
+                                if(x_selected)
+                                {
+                                    $("#x-value").append("<p class='graph-expression graph-selected'>"+$(this).text()+"(</p>");
+                                    $("#x-value").append("<p class='graph-expression'>)</p>");
+                                }
+                                
+                            }
+                            else{
+                                var $selected = $(".graph-selected");
+                                $selected.removeClass("graph-selected");
+                                $selected.after("<p class='graph-expression'>)</p>");
+                                $selected.after("<p class='graph-expression graph-selected'>"+$(this).text()+"(</p>");
+                            }
+                        }
+                        else if($(this).text() =='sin-1' ||$(this).text() =='cos-1'||$(this).text() =='tan-1')
+                        {
+                            if($(this).text() =='sin-1')
+                            {
+                                if($(".graph-selected").length < 1)
+                                {
+                                    if(f_selected)
+                                    {
+                                        $("#f-func").append("<p class='graph-expression graph-selected'>asin(</p>");
+                                        $("#f-func").append("<p class='graph-expression'>)</p>");
+                                    }     
+                                    if(g_selected)
+                                    {
+                                        $("#g-func").append("<p class='graph-expression graph-selected'>asin(</p>");
+                                        $("#g-func").append("<p class='graph-expression'>)</p>");
+                                    }
+                                    if(x_selected)
+                                    {
+                                        $("#x-value").append("<p class='graph-expression graph-selected'>asin(</p>");
+                                        $("#x-value").append("<p class='graph-expression'>)</p>");
+                                    }
+                                }  
+                                else{
+                                    var $selected = $(".graph-selected");
+                                    $selected.removeClass("graph-selected");
+                                    $selected.after("<p class='graph-expression'>)</p>");
+                                    $selected.after("<p class='graph-expression graph-selected'>asin(</p>");
+                                }
+                            }
+                            else if($(this).text() =='cos-1')
+                            {
+                                if($(".graph-selected").length < 1)
+                                {
+                                    if(f_selected)
+                                    {
+                                        $("#f-func").append("<p class='graph-expression graph-selected'>acos(</p>");
+                                        $("#f-func").append("<p class='graph-expression'>)</p>");
+                                    }     
+                                    if(g_selected)
+                                    {
+                                        $("#g-func").append("<p class='graph-expression graph-selected'>acos(</p>");
+                                        $("#g-func").append("<p class='graph-expression'>)</p>");
+                                    }
+                                    if(x_selected)
+                                    {
+                                        $("#x-value").append("<p class='graph-expression graph-selected'>acos(</p>");
+                                        $("#x-value").append("<p class='graph-expression'>)</p>");
+                                    }
+                                }    
+                                else{
+                                    var $selected = $(".graph-selected");
+                                    $selected.removeClass("graph-selected");
+                                    $selected.after("<p class='graph-expression'>)</p>");
+                                    $selected.after("<p class='graph-expression graph-selected'>acos(</p>");
+                                }
+                            }
+                            else if($(this).text() =='tan-1')
+                            {
+                                if($(".graph-selected").length < 1)
+                                {
+                                    if(f_selected)
+                                    {
+                                        $("#f-func").append("<p class='graph-expression graph-selected'>atan(</p>");
+                                        $("#f-func").append("<p class='graph-expression'>)</p>");
+                                    }     
+                                    if(g_selected)
+                                    {
+                                        $("#g-func").append("<p class='graph-expression graph-selected'>atan(</p>");
+                                        $("#g-func").append("<p class='graph-expression'>)</p>");
+                                    }
+                                    if(x_selected)
+                                    {
+                                        $("#x-value").append("<p class='graph-expression graph-selected'>atan(</p>");
+                                        $("#x-value").append("<p class='graph-expression'>)</p>");
+                                    }
+                                }  
+                                else{
+                                    var $selected = $(".graph-selected");
+                                    $selected.removeClass("graph-selected");
+                                    $selected.after("<p class='graph-expression'>)</p>");
+                                    $selected.after("<p class='graph-expression graph-selected'>atan(</p>");
+                                }
+                            }
+                        }
+                        else if($(this).text() =='√')
+                        {
+                            if($(".graph-selected").length < 1)
+                            {
+                                if(f_selected)
+                                {
+                                    $("#f-func").append("<p class='graph-expression graph-selected'>sqrt(</p>");
+                                    $("#f-func").append("<p class='graph-expression'>)</p>");
+                                }     
+                                if(g_selected)
+                                {
+                                    $("#g-func").append("<p class='graph-expression graph-selected'>sqrt(</p>");
+                                    $("#g-func").append("<p class='graph-expression'>)</p>");
+                                }
+                                if(x_selected)
+                                {
+                                    $("#x-value").append("<p class='graph-expression graph-selected'>sqrt(</p>");
+                                    $("#x-value").append("<p class='graph-expression'>)</p>");
+                                }
+                            }
+                            else{
+                                var $selected = $(".graph-selected");
+                                $selected.removeClass("graph-selected");
+                                $selected.after("<p class='graph-expression'>)</p>");
+                                $selected.after("<p class='graph-expression graph-selected'>sqrt(</p>");
+                            }
+                        }
+                        else if($(this).text() =='log')
+                        {
+                            if($(".graph-selected").length < 1)
+                            {
+                                if(f_selected)
+                                {
+                                    $("#f-func").append("<p class='graph-expression graph-selected'>log10(</p>");
+                                    $("#f-func").append("<p class='graph-expression'>)</p>");
+                                }     
+                                if(g_selected)
+                                {
+                                    $("#g-func").append("<p class='graph-expression graph-selected'>log10(</p>");
+                                    $("#g-func").append("<p class='graph-expression'>)</p>");
+                                }
+                                if(x_selected)
+                                {
+                                    $("#x-value").append("<p class='graph-expression graph-selected'>log10(</p>");
+                                    $("#x-value").append("<p class='graph-expression'>)</p>");
+                                }
+                            }
+                            else{
+                                var $selected = $(".graph-selected");
+                                $selected.removeClass("graph-selected");
+                                $selected.after("<p class='graph-expression'>)</p>");
+                                $selected.after("<p class='graph-expression graph-selected'>log10(</p>");
+                            }
+                        }
+                        else if($(this).text() =='ln')
+                        {
+                            if($(".graph-selected").length < 1)
+                            {
+                                if(f_selected)
+                                {
+                                    $("#f-func").append("<p class='graph-expression graph-selected'>log(</p>");
+                                    $("#f-func").append("<p class='graph-expression'>)</p>");
+                                }     
+                                if(g_selected)
+                                {
+                                    $("#g-func").append("<p class='graph-expression graph-selected'>log(</p>");
+                                    $("#g-func").append("<p class='graph-expression'>)</p>");
+                                }
+                                if(x_selected)
+                                {
+                                    $("#x-value").append("<p class='graph-expression graph-selected'>log(</p>");
+                                    $("#x-value").append("<p class='graph-expression'>)</p>");
+                                }
+                            }
+                            else{
+                                var $selected = $(".graph-selected");
+                                $selected.removeClass("graph-selected");
+                                $selected.after("<p class='graph-expression'>)</p>");
+                                $selected.after("<p class='graph-expression graph-selected'>log(</p>");
+                            }
+                        }
+                        
+                        else if($(this).text() =='π')
+                        {
+                            if($(".graph-selected").length < 1)
+                            {
+                                if(f_selected)
+                                    $("#f-func").append("<p class='graph-expression graph-selected'>pi</p>");
+                                if(g_selected)
+                                $("#g-func").append("<p class='graph-expression graph-selected'>pi</p>");
+                                if(x_selected)
+                                $("#x-value").append("<p class='graph-expression graph-selected'>pi</p>");
+                            }
+                            else{
+                                var $selected = $(".graph-selected");
+                                $selected.removeClass("graph-selected");
+                                $selected.after("<p class='graph-expression graph-selected'>pi</p>");
+                            }
+                        }
+                        else if($(this).text() =='('||$(this).text() ==')'||$(this).text() =='.'||$(this).text() =='i'||$(this).text() =='e'||$(this).text() =='^'||$(this).text() =='x')
+                        {
+                            if($(".graph-selected").length < 1)
+                            {
+                                if(f_selected)
+                                    $("#f-func").append("<p class='graph-expression graph-selected'>"+$(this).text()+"</p>");
+                                if(g_selected)
+                                    $("#g-func").append("<p class='graph-expression graph-selected'>"+$(this).text()+"</p>");
+                                if(x_selected)
+                                    $("#x-value").append("<p class='graph-expression graph-selected'>"+$(this).text()+"</p>");
+                            }
+                            else{
+                                var $selected = $(".graph-selected");
+                                $selected.removeClass("graph-selected");
+                                $selected.after("<p class='graph-expression graph-selected'>"+$(this).text()+"</p>");
+                            }
+                        }
+                        else if($(this).text() >=48 || $(this).text() <=57)
+                        {
+                            if($(".graph-selected").length < 1)
+                            {
+                                if(f_selected)
+                                    $("#f-func").append("<p class='graph-expression graph-selected'>"+$(this).text()+"</p>");
+                                if(g_selected)
+                                $("#g-func").append("<p class='graph-expression graph-selected'>"+$(this).text()+"</p>");
+                                if(x_selected)
+                                $("#x-value").append("<p class='graph-expression graph-selected'>"+$(this).text()+"</p>");
+                            }
+                            else{
+                                var $selected = $(".graph-selected");
+                                $selected.removeClass("graph-selected");
+                                $selected.after("<p class='graph-expression graph-selected'>"+$(this).text()+"</p>");
+                            }
+                        }
+                        
+                    }
+                    graph_parser.eval("f(x)="+$("#f-func").text());
+                    graph_parser.eval("g(x)="+$("#g-func").text());
+                    draw();
+                })
+            })
+            $('.graph-ratio-key').each(function(index, key){     
+                $(this).click(function(e){
+
+                    // console.log("f: "+f_value);
+                    // console.log("g: "+g_value);
+                    if($(this).text() == '+')
+                    {
+                        console.log("+");
+                        axix_add_scale+=2;
+                    }
+                    else if($(this).text() =='-')
+                    {
+                        console.log("-");
+                        axix_add_scale-=2;
+                        if(axix_add_scale<=-40)
+                        axix_add_scale=-38;
+                    }
+                    draw();
+                })
+            })
+        })
+
+        function convertWindow(n){
+
+            if(n==0)
+            {
+                $("#calculator").hide();
+                $("#graph").show();
+            }
+            else if(n==1)
+            {
+                $("#graph").hide();
+                $("#calculator").show();
+            }
+        }
+
+        function fun1(x){
+            return graph_parser.eval("f("+x.toString()+")");
+        }
+        function fun2(x){
+            return graph_parser.eval("g("+x.toString()+")");
+        }
+        function funX(){
+            return graph_parser.eval($("#x-value").text());
+        }
+
+        function draw(){
+            //console.log("draw");
+
+            var f_x_result = graph_parser.eval("f("+$("#x-value").text()+")").toString();
+            var g_x_result = graph_parser.eval("g("+$("#x-value").text()+")").toString();
+            $("#f-cal-value").text(f_x_result);
+            $("#g-cal-value").text(g_x_result);
+            
+            try{
+                var canvas = document.getElementById('canvas'),
+                context = canvas.getContext('2d');
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                
+                //var x_move_dis = x_move -0.5*canvas.width;
+                //var y_move_dis = y_move -0.5*canvas.height;
+                //console.log("ㅇㅇ:" +x_move_dis+","+y_move_dis);
+
+                
+                
+                console.log("move-result:" +x_move_result+","+y_move_result);
+                console.log("axes-result:" +axes.x0+","+axes.y0);
+                //axes.x0 = 0.5*canvas.width + x_move;  // x0 pixels from left to x=0
+                //axes.y0 = 0.5*canvas.height + y_move; // y0 pixels from top to y=0
+                
+                axes.scale = 40 + axix_add_scale;              // 40 pixels from x=0 to x=1
+                console.log("axes-scale:" +axes.scale);
+
+                //console.log("axes-scale:" +axes.scale);
+                axes.doNegativeX = true;
+                
+                
+                var f_thick,g_thick,x_thick;
+                if(f_selected)
+                {
+                    f_thick=2;
+                    g_thick=1;
+                    x_thick=1;
+                }
+                if(g_selected)
+                {
+                    f_thick=1;
+                    g_thick=2;
+                    x_thick=1;
+                }
+                if(x_selected)
+                {
+                    f_thick=1;
+                    g_thick=1;
+                    x_thick=2;
+                }   
+                
+                drawGrid(context,axes);
+                showAxes(context,axes);
+                
+                funGraph(context,axes,fun1,"#d15959",f_thick);
+                funGraph(context,axes,fun2,"#475fca",g_thick);
+                //funGraph(context,axes,funX,"#da892d",x_thick);
+                drawX(context,axes,"#da892d",x_thick)
+            }
+            catch(err)
+            {
+                console.error(err);
+                //alert(err);
+            }
+        }
+        function drawPoint(ctx,axes,xpos,ypos,color)
+        {
+            var x0=axes.x0;
+            var y0=axes.y0;
+            var scale=axes.scale;
+            ctx.beginPath();
+
+            ctx.arc(xpos,ypos,2,0,2*Math.PI,true);
+            ctx.fill();
+        }
+
+        function funGraph (ctx,axes,func,color,thick) {
+            var xx;
+            var yy;
+            var dx=4;
+            var x0=axes.x0;
+            var y0=axes.y0;
+            var scale=axes.scale;
+            var iMax = Math.round((ctx.canvas.width-x0)/dx);
+            var iMin = axes.doNegativeX ? Math.round(-x0/dx) : 0;
+            ctx.beginPath();
+            ctx.lineWidth = thick;
+            ctx.strokeStyle = color;
+
+            for (var i=iMin;i<=iMax;i++) {
+                xx = dx*i;
+                yy = scale*func(xx/scale);
+                if (i==iMin)
+                    ctx.moveTo(x0+xx,y0-yy);
+                else
+                    ctx.lineTo(x0+xx,y0-yy);
+            }
+            ctx.stroke();
+        }
+        
+        function drawGrid(ctx,axes)
+        {
+            
+            var h=ctx.canvas.height;
+            var w=ctx.canvas.width;
+            var scale = axes.scale;
+            var dx=scale;
+            var x0=axes.x0;
+            var y0=axes.y0;
+            var xx,yy;
+
+            var iMax = Math.round((ctx.canvas.width-x0)/dx);
+            var iMin = axes.doNegativeX ? Math.round(-x0/dx) : 0;
+
+            var jMax = Math.round((ctx.canvas.width-y0)/dx);
+            var jMin = axes.doNegativeY ? 0 : Math.round(-y0/dx);
+
+            //console.log(xx);
+            //var xx = $("#x-value").text().parseFloat();
+            ctx.beginPath();
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = "rgb(200,200,200)";
+            
+            ctx.font="10px Verdana";
+
+            //console.log("iMin,iMax:"+iMin+","+iMax);
+            //console.log("jMin,jMax:"+jMin+","+jMax);
+            for (var i=iMin;i<=iMax;i++) {
+                xx = dx*i;
+                ctx.moveTo(x0 + xx,0);
+                ctx.lineTo(x0 + xx,h);
+                ctx.fillText(i.toString(),x0+xx-10,10);
+            }
+            for (var i=jMin;i<=jMax;i++) {
+                yy = dx*i;
+                ctx.moveTo(0,y0+yy);
+                ctx.lineTo(w,y0+yy);
+                ctx.fillText((-i).toString(),5,y0+yy-5);
+            }
+            ctx.stroke();
+        }
+
+        function drawX(ctx,axes,color,thick)
+        {
+            var h=ctx.canvas.height;
+            var scale = axes.scale;
+            var x0=axes.x0;
+            var xx = graph_parser.eval($("#x-value").text());
+            //console.log(xx);
+            //var xx = $("#x-value").text().parseFloat();
+            ctx.beginPath();
+            ctx.lineWidth = thick;
+            ctx.strokeStyle = color;
+            ctx.moveTo(x0 + xx*scale,0);
+            ctx.lineTo(x0 + xx*scale,h);
+            ctx.stroke();
+        }
+        function showAxes(ctx,axes) {
+            var x0=axes.x0, w=ctx.canvas.width;
+            var y0=axes.y0, h=ctx.canvas.height;
+            var xmin = axes.doNegativeX ? 0 : x0;
+            ctx.beginPath();
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = "rgb(50,50,50)";
+
+            
+
+            //console.log("xmin:"+xmin+", "+"w:"+w+", "+"y0:"+y0)
+            ctx.moveTo(xmin,y0); ctx.lineTo(w,y0);  // X axis
+            ctx.moveTo(x0,0);    ctx.lineTo(x0,h);  // Y axis
+            ctx.font="15px Verdana";
+            ctx.fillText("0",x0-12,y0+15);
+            ctx.stroke();
+        }
+    </script>
+</head>
+<body class="no-drag" onload="draw()">
+    <h1>fancy calculator</h1>
+    <div  id="graph">
+        <div class="graph-ratio-key"style="transform:translate(90px,230px);">+</div>
+        <div class="graph-ratio-key" style="transform:translate(130px,230px);">-</div>
+        <canvas id="canvas" width= '340px' height= '270px'></canvas>
+
+        <table border = "0px" style = "padding:2px 3px 2px 3px;  ">
+            <tr>
+                <td class="back-key" style="width: 40px;color:#646464; background-color: #ffffff;" onclick="convertWindow(1)">←Back</td>
+                <td style="width:10px;"></td>
+                <td class="graph-key" style="width:40px;color:#ffffff;background-color: #975f20;font-size:15px;">x</td>
+                <td ></td>
+                <td ></td>
+                <td></td>
+                <td></td>
+                <td  style="font: bold 15px sans-serif;">x</td>
+                <td>=</td>
+                <td><div class="graph-func" id="x-value" style = "width: 60px;"></div></td>
+                <td></td>
+                <td class="graph-key" style="position: relative; padding:4px 10px 4px 10px; font-size:15px; width: 20px; color:#ffffff;background-color: #e24c47;">AC</td>
+             </tr>
+             <tr>
+                <td class="f-text"  style=" color:#d15959; background-color:#d1d1d1;text-align:center; font: 15px sans-serif;">f(x)=</td>
+                <td colspan="8"><div class="graph-func" id="f-func"  style = "width: 150px;"></div></td>
+                <td><div class="graph-func" id="f-cal-value" style = "width: 60px; background-color:#dbdbdb;"></div></td>
+                <td></td>
+                <td class="graph-key" rowspan="2" style="line-height:0.8em; width: 40px; height: 40px; color:#ffffff;background-color: #3a966b;font-size:15px;">Delete<br><span style="font-size:30px;">←</span></td>
+            </tr>
+            <tr>
+                <td class="g-text"  style=" color:#475fca; background-color:#d1d1d1;text-align:center;font: 15px sans-serif; ">g(x)=</td>
+                
+                <td colspan="8"><div class="graph-func" id="g-func"  style = "width: 150px;"></div></td>
+                <td><div class="graph-func" id="g-cal-value" style = "width: 60px; background-color:#dbdbdb;"></div></td>
+                
+                <td></td>
+            </tr>
+        </table>
+        <table border = "0" style = "border-spacing: 5px; float:left;">
+            <tr>
+                <td class="graph-key" style="color:#ffffff; background-color:#444444; width:25px; height:27px;">sin</td>
+                <td class="graph-key" style="color:#cacaca; background-color:#222222; width:25px; height:27px;">sin<sup>-1</sup></td>
+            </tr>
+            <tr>
+                <td class="graph-key" style="color:#ffffff; background-color:#444444; width:25px; height:27px;">cos</td>
+                <td class="graph-key" style="color:#cacaca; background-color:#222222; width:25px; height:27px;">cos<sup>-1</sup></td>
+            </tr>
+            <tr>
+                <td class="graph-key" style="color:#ffffff; background-color:#444444; width:25px; height:27px;">tan</td>
+                <td class="graph-key" style="color:#cacaca; background-color:#222222; width:25px; height:27px;">tan<sup>-1</sup></td>
+            </tr>
+            <tr></tr>
+            <tr>
+                <td class="graph-key" style="color:#ffffff; background-color:#7c7c7c; width:25px; height:27px;">√</td>
+                <td class="graph-key" style="color:#cacaca; background-color:#525252; width:25px; height:27px;">^</td>
+            </tr>
+            <tr>
+                <td class="graph-key" style="color:#ffffff; background-color:#7c7c7c; width:25px; height:27px;">log</td>
+                <td class="graph-key" style="color:#cacaca; background-color:#525252; width:25px; height:27px;">π</td>
+            </tr>
+            <tr>
+                <td class="graph-key" style="color:#ffffff; background-color:#7c7c7c; width:25px; height:27px;">ln</td>
+                <td class="graph-key" style="color:#cacaca; background-color:#525252; width:25px; height:27px;">e</td>
+            </tr>
+        </table>
+        <table border = "0" style = "border-spacing: 5px; float:left;">
+            <tr>
+                <td class="graph-key" style="color:#000000; background-color:#ffffff;font-size:20px; width:50px; height:50px;">7</td>
+                <td class="graph-key" style="color:#000000; background-color:#ffffff;font-size:20px; width:50px; height:50px;">8</td>
+                <td class="graph-key" colspan="2" style="color:#000000; background-color:#ffffff;font-size:20px; width:50px; height:50px;">9</td>
+            </tr>
+            <tr>
+                <td class="graph-key" style="color:#000000; background-color:#ffffff;font-size:20px; width:50px; height:50px;">4</td>
+                <td class="graph-key" style="color:#000000; background-color:#ffffff;font-size:20px; width:50px; height:50px;">5</td>
+                <td class="graph-key"colspan="2" style="color:#000000; background-color:#ffffff;font-size:20px; width:50px; height:50px;">6</td>
+            </tr>
+            <tr>
+                <td class="graph-key" style="color:#000000; background-color:#ffffff;font-size:20px; width:50px; height:50px;">1</td>
+                <td class="graph-key" style="color:#000000; background-color:#ffffff;font-size:20px; width:50px; height:50px;">2</td>
+                <td class="graph-key"colspan="2" style="color:#000000; background-color:#ffffff;font-size:20px; width:50px; height:50px;">3</td>
+            </tr>
+            <tr>
+                <td class="graph-key" style="color:#000000; background-color:#ffffff;font-size:20px; width:50px; height:50px;">.</td>
+                <td class="graph-key" style="color:#000000; background-color:#ffffff;font-size:20px; width:50px; height:50px;">0</td>
+                <td class="graph-key" style="color:#000000; background-color:#ffffff;font-size:20px; width:20px; height:50px;">(</td>
+                <td class="graph-key" style="color:#000000; background-color:#ffffff;font-size:20px; width:20px; height:50px;">)</td>
+            </tr>
+        </table>
+        <table border = "0" style = "border-spacing: 5px; float:left;">
+                <tr>
+                    <td class="graph-key" style="color:#000000; background-color:rgb(255, 216, 108);font-size:30px; width:50px; height:50px;">+</td>
+                </tr>
+                <tr>
+                    <td class="graph-key" style="color:#000000; background-color:rgb(255, 216, 108);font-size:30px; width:50px; height:50px;">-</td>
+                </tr>
+                <tr>
+                    <td class="graph-key" style="color:#000000; background-color:rgb(255, 216, 108);font-size:30px; width:50px; height:50px;">×</td>
+                </tr>
+                <tr>
+                    <td class="graph-key" style="color:#000000; background-color:rgb(255, 216, 108);font-size:30px; width:50px; height:50px;">÷</td>
+                </tr>
+            </table>
+        
+    </div>
+
+
+   <div id="calculator">
+       <div id="result-window" ></div>
+       <div id="result">= </div>
+       <div id="history">
+       </div>
+       <span class ="history-clear" >clear</span>
+       <table border = "0px" style = "padding:5px 5px 5px 5px; float:left; ">
+           <tr>
+               <td class="keyFunc" style="color:#ffffff; background-color: #41997f;">copy</td>
+               <td></td>
+               <td class="keyFunc" style="color:#ffffff; background-color: #2f6b59;">paste</td>
+               <td></td>
+               <td></td>
+               <td class="keyFunc" style="color:#ffffff; background:linear-gradient(45deg,#b8875e 85%,#000000 15%);">x,y,z</td>
+               <td></td>
+               <td class="keyFunc" style="font-size:12px; width: 50px; color:#ffffff; background:linear-gradient(45deg,#a86936 90%,#000000 10%);">f( ),g( )</td>
+               <td></td>
+               <td class="gkeyFunc" onclick="convertWindow(0);" style="position: relative; padding:4px 10px 4px 10px; font-size:10px; width: 20px; color:#ffffff;background-color: #17a19b;">Graph</td>
+               <td></td>
+               <td class="keyFunc" style="position: relative; padding:4px 10px 4px 10px; font-size:20px; width: 20px; color:#ffffff;background-color: #e24c47;">AC</td>
+            </tr>
+       </table>
+       
+       <table border = "0" style = "border-spacing: 6px;float:left; ">
+           <tr>
+               <td href="#sinLayer" class="keyFunc" value="sin" style="background:linear-gradient(45deg,#818181 85%,#000000 15%);">sin</td>
+               <td class="keyFunc" style="background-color:#aaaaaa">√</td>
+               <td class="keyFunc" style = "font-size:10px;">mod</td>
+               <td class="keyFunc" style="background-color:#aaaaaa"><sub style="font-size:10px;">■</sub>C<sub style="font-size:10px;">□</sub></td>
+               <td></td>
+
+               <td class = "keyFunc" rowspan="2" style="background:linear-gradient(45deg,#818181 90%,#000000 10%);font-size:15px;">[matrix]<br>(vector)</td>
+               <td></td>
+
+               <td class="key" colspan="4" rowspan="2" style="line-height:0.8em; width: 100px; height: 40px; color:#ffffff;background-color: #3a966b;padding: 10px 25px 5px 25px;font-size:15px;">Delete<br><span style="font-size:30px;">←</span></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+           
+           <tr>
+                <td class="keyFunc" style="background:linear-gradient(45deg,#818181 85%,#000000 15%);">cos</td>
+                <td class="keyFunc" style="background-color:#aaaaaa">log</td>
+                <td class="keyFunc"><i style="font-size:15px;">χ</i><sup style="font-size:10px;">■</sup></td>
+                <td class="keyFunc" style="background-color:#aaaaaa"><sub style="font-size:10px;">■</sub>P<sub style="font-size:10px;">□</sub></td>
+                <td></td>
+                
+                <td></td>
+                <td></td>
+                
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+
+                
+            </tr>
+            
+            <tr>
+                <td class="keyFunc" style="background:linear-gradient(45deg,#818181 85%,#000000 15%);">tan</td>
+                <td class="keyFunc" style="background-color:#aaaaaa">ln</td>
+                <td class="keyFunc">e<sup><i>x</i></sup></td>
+                <td class="keyFunc" style="background-color:#aaaaaa">χ!</td>
+                <td></td>
+
+
+                <td class = "keyFunc" style="background:linear-gradient(45deg,#818181 90%,#000000 10%);font-size:10px;">cross,dot,...</td>
+                <td></td>
+
+                <td class="key" colspan="2" style="font-size:10px;line-height:0.8em; width: 50px;height: 20px;">=<br></td>
+                
+                <td class="key" colspan="2" style="background:linear-gradient(45deg,#eeeeee 90%,#000000 10%);font-size:10px; line-height:0.8em; width: 50px;height: 20px;">!=<br></td>
+                
+            </tr>
+       </table>
+
+        <table border = "0" style = "float:left; padding: 7px 0px 0px 3px">
+            
+            <tr>
+                <td class= "keyConst" cellpadding="20px">π</td>
+            </tr>
+            <tr>
+                <td></td>
+            </tr>
+            <tr>
+                <td class= "keyConst">e</td>
+            </tr>
+            <tr>
+                <td></td>
+            </tr>
+            <tr>
+                <td class= "keyConst">i</td>
+            </tr>
+            <tr>
+                    <td></td>
+                </tr>
+            <tr>
+                <td class="key" style = "width: 20px;">[</td>
+            </tr>
+            <tr>
+                <td class="key" style = "width :20px;">(</td>
+            </tr>
+            
+        </table>
+        <table border="0" style = "float:left; padding: 7px 0px 0px 0px;">
+            <tr>
+                <td colspan="2" class="key">7</td>
+                <td class="key">8</td>
+                <td class="key">9</td>
+            </tr>
+            <tr>
+                <td colspan="2" class="key">4</td>
+                <td class="key">5</td>
+                <td class="key">6</td>
+            </tr>
+            <tr>
+                <td colspan="2" class="key">1</td>
+                <td class="key">2</td>
+                <td class="key">3</td>
+            </tr>
+            <tr>
+                <td class="key" style="width: 30px;">.</td>
+                <td class="key" style="width: 30px;">,</td>
+                <td class="key">0</td>
+                <td class="key"><code style="font: bold 20px sans-serif;">×10<sup style="font: bold 13px sans-serif;"><i>χ</i></sup></code></td>
+            </tr>
+        </table>
+        <table border="0" style = "float: left; padding: 7px 0px 0px 0px;">
+            <tr>
+                <td class="keyFour" style="border-top-left-radius:5px;">×</td>
+                <td class="keyFour" style="border-top-right-radius:5px;">÷</td>
+            </tr>
+            <tr>
+                <td class="keyFour" style="border-bottom-left-radius:5px;">+</td>
+                <td class="keyFour" style="border-bottom-right-radius:5px;">-</td>
+            </tr>
+           
+        </table>
+        <table style = "float: left; padding: 3px 0px 0px 0px; ">
+            <tr>
+                <td class="key" style = "width: 20px;">]</td>
+            </tr>
+            <tr>
+                <td class="key" style = "width: 20px;">)</td>
+            </tr>
+        </table>
+        <table style = "padding: 3px 0px 0px 5px;">
+            <tr>
+                <td class="key" style = "width:50px; height:85px; border-radius:0px;border: 1px solid rgb(150, 150, 150);">EV</td>
+            </tr>
+        </table>       
+   </div>
+
+
+    <div id="sinLayer" class="pop-layer" style="transform:translate(-140px,0); top: 410px; width: 30px;">
+        <div class="pop-element" style="width:30px">sin<sup>-1</sup></div>
+    </div>
+    <div id="cosLayer" class="pop-layer" style="transform:translate(-140px,0); top: 445px; width: 30px;">
+        <div class="pop-element" style="width:30px">cos<sup>-1</sup></div>
+    </div>
+    <div id="tanLayer" class="pop-layer" style="transform:translate(-140px,0); top: 480px; width: 30px;">
+        <div class="pop-element" style="width:30px">tan<sup>-1</sup></div>
+    </div>
+    <div id="xyzLayer" class="pop-layer" style="transform:translate(-25px,0); top: 370px; width: 30px;">
+        <div class="pop-element" style="width:30px">x</div>
+        <div class="pop-element" style="width:30px">y</div>
+        <div class="pop-element" style="width:30px">z</div>
+    </div>
+    <div id="fgLayer" class="pop-layer" style="transform:translate(40px,0); top: 370px; width: 30px;">
+        <div class="pop-element" style="width:30px">f</div>
+        <div class="pop-element" style="width:30px">g</div>
+    </div>
+    <table id = "matrix" value="matrix-value" class="pop-layer" style="border-spacing: 0px;transform:translate(40px,0); top: 400px;">
+            <tr>
+                <td id= "m11" class= "mv-element" style="font-size:0px;">ㆍ</td>
+                <td id= "m12" class= "mv-element" style="font-size:0px;">ㆍ</td>
+                <td id= "m13" class= "mv-element" style="font-size:0px;">ㆍ</td>
+                <td id= "m14" class= "mv-element" style="font-size:0px;">ㆍ</td>
+                <td id= "m15" class= "mv-element" style="font-size:0px;">ㆍ</td>
+            </tr>
+            <tr>
+                <td id= "m21" class= "mv-element" style="font-size:0px;">ㆍ</td>
+                <td id= "m22" class= "mv-element" style="font-size:0px;">ㆍ</td>
+                <td id= "m23" class= "mv-element" style="font-size:0px;">ㆍ</td>
+                <td id= "m24" class= "mv-element" style="font-size:0px;">ㆍ</td>
+                <td id= "m25" class= "mv-element" style="font-size:0px;">ㆍ</td>
+            </tr>
+            <tr>
+                <td id= "m31" class= "mv-element" style="font-size:0px;">ㆍ</td>
+                <td id= "m32" class= "mv-element" style="font-size:0px;">ㆍ</td>
+                <td id= "m33" class= "mv-element" style="font-size:0px;">ㆍ</td>
+                <td id= "m34" class= "mv-element" style="font-size:0px;">ㆍ</td>
+                <td id= "m35" class= "mv-element" style="font-size:0px;">ㆍ</td>
+            </tr>
+            <tr>
+                <td id= "m41" class= "mv-element" style="font-size:0px;">ㆍ</td>
+                <td id= "m42" class= "mv-element" style="font-size:0px;">ㆍ</td>
+                <td id= "m43" class= "mv-element" style="font-size:0px;">ㆍ</td>
+                <td id= "m44" class= "mv-element" style="font-size:0px;">ㆍ</td>
+                <td id= "m45" class= "mv-element" style="font-size:0px;">ㆍ</td>
+            </tr>
+            <tr>
+                <td id= "m51" class= "mv-element" style="font-size:0px;">ㆍ</td>
+                <td id= "m52" class= "mv-element" style="font-size:0px;">ㆍ</td>
+                <td id= "m53" class= "mv-element" style="font-size:0px;">ㆍ</td>
+                <td id= "m54" class= "mv-element" style="font-size:0px;">ㆍ</td>
+                <td id= "m55" class= "mv-element" style="font-size:0px;">ㆍ</td>
+            </tr>
+    </table>
+    <div id="matOperLayer" class="pop-layer" style="transform:translate(40px,0); top: 480px; width: 30px;">
+        <div class="pop-element" style="width:30px">cross</div>
+        <div class="pop-element" style="width:30px">dot</div>
+        <div class="pop-element" style="width:30px">det</div>
+        <div class="pop-element" style="width:30px">inv</div>
+    </div>
+    <div id="conLayer" class="pop-layer" style="transform:translate(140px,0); top: 480px; width: 30px;">
+        <div class="pop-element" style="width:30px">==</div>
+        <div class="pop-element" style="width:30px">!=</div>
+        <div class="pop-element" style="width:30px">></div>
+        <div class="pop-element" style="width:30px"><</div>
+        <div class="pop-element" style="width:30px">>=</div>
+        <div class="pop-element" style="width:30px"><=</div>
+    </div>
+
+
+    
+
+
+</body>
+</html>
